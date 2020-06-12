@@ -30,7 +30,7 @@ check_remote_dir() {
   echo "Checking remote directory: '$REMOTE'"
   if $CMD -o StrictHostKeyChecking=no -o ConnectTimeout=${INPUT_CONNECT_TIMEOUT:-30s} -p "${INPUT_PORT:-22}" "$INPUT_USER"@"$INPUT_HOST" "[ ! -d $REMOTE ]"; then
     echo "Creating: '$REMOTE' on '$INPUT_USER'@'$INPUT_HOST'"
-    -o StrictHostKeyChecking=no -o ConnectTimeout=${INPUT_CONNECT_TIMEOUT:-30s} -p "${INPUT_PORT:-22}" "$INPUT_USER"@"$INPUT_HOST" "mkdir -p $REMOTE"
+    $CMD -o StrictHostKeyChecking=no -o ConnectTimeout=${INPUT_CONNECT_TIMEOUT:-30s} -p "${INPUT_PORT:-22}" "$INPUT_USER"@"$INPUT_HOST" "mkdir -p $REMOTE"
   else
     echo "'$REMOTE' exists [OK]"
   fi
