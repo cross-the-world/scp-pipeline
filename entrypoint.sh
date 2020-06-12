@@ -25,7 +25,7 @@ check_remote_dir() {
   local REMOTE=$2
   CMD="ssh"
   if $USEPASS; then
-    CMD="sshpass -p $INPUT_PASS scp"
+    CMD="sshpass -p $INPUT_PASS ssh"
   fi
   echo "Checking remote directory: '$REMOTE'"
   if $CMD -o StrictHostKeyChecking=no -o ConnectTimeout=${INPUT_CONNECT_TIMEOUT:-30s} -p "${INPUT_PORT:-22}" "$INPUT_USER"@"$INPUT_HOST" "[ ! -d $REMOTE ]"; then
