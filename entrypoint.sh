@@ -23,7 +23,7 @@ createKeyFile() {
 check_remote_dir() {
   local USEPASS=$1
   local REMOTE=$2
-  CMD="ssh"
+  local CMD="ssh"
   if $USEPASS; then
     CMD="sshpass -p $INPUT_PASS ssh"
   fi
@@ -41,7 +41,7 @@ executeSCP() {
   local LINES=$2
   local COMMAND=
 
-  CMD="scp"
+  local CMD="scp"
   if $USEPASS; then
     CMD="sshpass -p $INPUT_PASS scp"
   fi
