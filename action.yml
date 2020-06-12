@@ -1,0 +1,38 @@
+name: 'scp-pipeline'
+description: 'Pipeline: scp'
+author: 'Scott Ng'
+inputs:
+  host:
+    description: 'ssh remote host'
+    required: true
+  port:
+    description: 'ssh remote port'
+    default: 22
+  user:
+    description: 'ssh remote user'
+    required: true
+  key:
+    description: 'content of ssh private key. ex raw content of ~/.ssh/id_rsa'
+    required: false
+  pass:
+    description: 'ssh remote password'
+    required: false
+  connect_timeout:
+    description: 'connection timeout to remote host'
+    default: "30s"
+    required: false
+  local:
+    description: 'source to copy'
+    required: false
+  remote:
+    description: 'destination for copy'
+    required: false
+  scp:
+    description: 'scp from local to remote'
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+branding:
+  icon: 'copy'
+  color: 'gray-dark'

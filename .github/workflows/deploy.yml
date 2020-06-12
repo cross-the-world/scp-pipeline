@@ -1,0 +1,36 @@
+name: scp pipeline
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+
+      - name: scp pipeline
+        uses: cross-the-world/scp-pipeline@master
+        with:
+          host: ${{ secrets.DC_HOST }}
+          user: ${{ secrets.DC_USER }}
+          pass: ${{ secrets.DC_PASS }}
+          port: ${{ secrets.DC_PORT }}
+          connect_timeout: 10s
+          local: './test/*'
+          remote: /home/github/test/
+          scp: |
+            ./test/test*.csv => "/home/github/test/test2/"
+
+      - name: local remote scp
+        uses: cross-the-world/scp-pipeline@master
+        with:
+          host: ${{ secrets.DC_HOST }}
+          user: ${{ secrets.DC_USER }}
+          pass: ${{ secrets.DC_PASS }}
+          local: "./test/test1*"
+          remote: /home/github/test/test1/
