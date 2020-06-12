@@ -16,7 +16,6 @@ RUN apk update && \
   rm -rf /var/cache/apk/*
 
 COPY entrypoint.sh /entrypoint.sh
-COPY test /opt/test
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
