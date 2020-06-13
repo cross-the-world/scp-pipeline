@@ -1,7 +1,7 @@
 FROM python:3.8.3-slim-buster
 
 LABEL "maintainer"="Scott Ng <thuongnht@gmail.com>"
-LABEL "repository"="https://github.com/cross-the-world/ssh-pipeline"
+LABEL "repository"="https://github.com/cross-the-world/scp-pipeline"
 LABEL "version"="latest"
 
 LABEL "com.github.actions.name"="scp-pipeline"
