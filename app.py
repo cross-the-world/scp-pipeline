@@ -34,6 +34,17 @@ def convert_to_seconds(s):
     return 30
 
 
+strips = ["", "\"", "", "'", ""]
+
+
+def strip_path(p):
+    if not p:
+        return None
+    for c in strips:
+        p = p.strip(c)
+    return p
+
+
 def connect():
     ssh = paramiko.SSHClient()
     p_key = paramiko.RSAKey.from_private_key(INPUT_KEY) if INPUT_KEY else None
@@ -64,8 +75,8 @@ def scp_process():
             continue
         l2r = c.split("=>")
         if len(l2r) == 2:
-            local = l2r[0].strip()
-            remote = l2r[1].strip()
+            local = strip_path(l2r[0])
+            remote = strip_path(l2r[1])
             if local and remote:
                 copy_list.append({"l": local, "r": remote})
                 continue
@@ -76,14 +87,14 @@ def scp_process():
         print("SCP no copy list found")
         return
 
-    ssh = connect()
-    with scp.SCPClient(ssh.get_transport(), progress=progress, sanitize=lambda x: x) as conn:
-        for l2r in copy_list:
-            remote = l2r.get('r')
-            ssh.exec_command(f"mkdir -p {remote} || true")
-            for f in [f for f in glob(l2r.get('l'))]:
-                conn.put(f, remote_path=remote, recursive=True)
-                print(f"{f} -> {remote}")
+    with connect() as ssh:
+        with scp.SCPClient(ssh.get_transport(), progress=progress, sanitize=lambda x: x) as conn:
+            for l2r in copy_list:
+                remote = l2r.get('r')
+                ssh.exec_command(f"mkdir -p {remote} || true")
+                for f in [f for f in glob(l2r.get('l'))]:
+                    conn.put(f, remote_path=remote, recursive=True)
+                    print(f"{f} -> {remote}")
 
 
 if __name__ == '__main__':

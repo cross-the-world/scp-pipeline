@@ -24,7 +24,7 @@ jobs:
           local: './test/*'
           remote: /home/github/test/
           scp: |
-            ./test/test*.csv => "/home/github/test/test2/"
+            './test/test*.csv' => "/home/github/test/test2/"
 
       - name: local remote scp
         uses: cross-the-world/scp-pipeline@master
