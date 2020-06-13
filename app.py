@@ -46,7 +46,7 @@ def connect():
 
 # Define progress callback that prints the current percentage completed for the file
 def progress(filename, size, sent):
-    sys.stdout.write(f"{filename} copying: {float(sent)/float(size)*100:.2f}")
+    sys.stdout.write(f"{filename}... {float(sent)/float(size)*100:.2f}%\n")
 
 
 def scp_process():
@@ -81,9 +81,8 @@ def scp_process():
         for l2r in copy_list:
             remote = l2r.get('r')
             ssh.exec_command(f"mkdir -p {remote} || true")
-            files = [f for f in glob(l2r.get('l'))]
-            conn.put(files, remote_path=remote, recursive=True)
-            for f in files:
+            for f in [f for f in glob(l2r.get('l'))]:
+                conn.put(f, remote_path=remote, recursive=True)
                 print(f"{f} -> {remote}")
 
 
