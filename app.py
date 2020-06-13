@@ -37,12 +37,12 @@ def convert_to_seconds(s):
 strips = [" ", "\"", " ", "'", " "]
 
 
-def strip_path(p):
+def strip_and_parse_envs(p):
     if not p:
         return None
     for c in strips:
         p = p.strip(c)
-    return p
+    return path.expandvars(p)
 
 
 def connect():
@@ -69,14 +69,17 @@ def scp_process():
 
     copy_list = []
     if INPUT_LOCAL and INPUT_REMOTE:
-        copy_list.append({"l": INPUT_LOCAL, "r": INPUT_REMOTE})
+        copy_list.append({
+            "l": strip_and_parse_envs(INPUT_LOCAL),
+            "r": strip_and_parse_envs(INPUT_REMOTE)
+        })
     for c in INPUT_SCP.splitlines():
         if not c:
             continue
         l2r = c.split("=>")
         if len(l2r) == 2:
-            local = strip_path(l2r[0])
-            remote = strip_path(l2r[1])
+            local = strip_and_parse_envs(l2r[0])
+            remote = strip_and_parse_envs(l2r[1])
             if local and remote:
                 copy_list.append({"l": local, "r": remote})
                 continue
