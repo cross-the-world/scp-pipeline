@@ -52,7 +52,7 @@ def connect():
     if INPUT_KEY:
         with tempfile.TemporaryFile() as fp:
             fp.write(INPUT_KEY.encode())
-            p_key = paramiko.RSAKey.from_private_key(INPUT_KEY)
+            p_key = paramiko.RSAKey.from_private_key(file_obj=fp)
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(INPUT_HOST, port=INPUT_PORT, username=INPUT_USER,
                 pkey=p_key, password=INPUT_PASS,
