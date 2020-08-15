@@ -44,7 +44,7 @@ def strip_and_parse_envs(p):
         return None
     for c in strips:
         p = p.strip(c)
-    return path.expandvars(p) if p != "." else path.realpath(p)
+    return path.expandvars(p) if p != "." else f"{path.realpath(p)}/*"
 
 
 def connect():
