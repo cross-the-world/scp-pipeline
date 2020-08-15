@@ -6,6 +6,7 @@ import scp
 import sys
 import math
 import re
+import tempfile
 
 
 envs = environ
@@ -47,7 +48,11 @@ def strip_and_parse_envs(p):
 
 def connect():
     ssh = paramiko.SSHClient()
-    p_key = paramiko.RSAKey.from_private_key(INPUT_KEY) if INPUT_KEY else None
+    p_key = None
+    if INPUT_KEY:
+        with tempfile.TemporaryFile() as fp:
+            fp.write(INPUT_KEY.encode())
+            p_key = paramiko.RSAKey.from_private_key(INPUT_KEY)
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(INPUT_HOST, port=INPUT_PORT, username=INPUT_USER,
                 pkey=p_key, password=INPUT_PASS,

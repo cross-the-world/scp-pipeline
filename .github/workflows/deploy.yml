@@ -34,6 +34,7 @@ jobs:
         uses: cross-the-world/scp-pipeline@master
         with:
           host: ${{ secrets.DC_HOST }}
+          port: ${{ secrets.DC_PORT }}
           user: ${{ secrets.DC_USER }}
           pass: ${{ secrets.DC_PASS }}
           local: "./test/test1*"
@@ -45,7 +46,20 @@ jobs:
           TO_DIR: /home/github/test/test3/
         with:
           host: ${{ secrets.DC_HOST }}
+          port: ${{ secrets.DC_PORT }}
           user: ${{ secrets.DC_USER }}
           pass: ${{ secrets.DC_PASS }}
+          local: "."
+          remote: $TO_DIR
+
+      - name: local remote scp 3
+        uses: cross-the-world/scp-pipeline@master
+        env:
+          TO_DIR: /home/github/test/test3/
+        with:
+          host: ${{ secrets.DC_HOST }}
+          port: ${{ secrets.DC_PORT }}
+          user: ${{ secrets.DC_USER }}
+          key: ${{ secrets.DC_KEY }}
           local: "."
           remote: $TO_DIR
