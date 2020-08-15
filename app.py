@@ -7,6 +7,7 @@ import sys
 import math
 import re
 import tempfile
+import os
 
 
 envs = environ
@@ -43,21 +44,26 @@ def strip_and_parse_envs(p):
         return None
     for c in strips:
         p = p.strip(c)
-    return path.expandvars(p)
+    return path.expandvars(p) if p == "." else path.realpath(p)
 
 
 def connect():
-    ssh = paramiko.SSHClient()
-    p_key = None
-    if INPUT_KEY:
-        with tempfile.TemporaryFile() as fp:
-            fp.write(INPUT_KEY.encode())
-            p_key = paramiko.RSAKey.from_private_key(file_obj=fp)
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(INPUT_HOST, port=INPUT_PORT, username=INPUT_USER,
-                pkey=p_key, password=INPUT_PASS,
-                timeout=convert_to_seconds(INPUT_CONNECT_TIMEOUT))
-    return ssh
+    tmp = tempfile.NamedTemporaryFile(delete=False)
+    try:
+        ssh = paramiko.SSHClient()
+        p_key = None
+        if INPUT_KEY:
+            tmp.write(INPUT_KEY.encode())
+            tmp.close()
+            p_key = paramiko.RSAKey.from_private_key_file(filename=tmp.name)
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(INPUT_HOST, port=INPUT_PORT, username=INPUT_USER,
+                    pkey=p_key, password=INPUT_PASS,
+                    timeout=convert_to_seconds(INPUT_CONNECT_TIMEOUT))
+        return ssh
+    finally:
+        os.unlink(tmp.name)
+        tmp.close()
 
 
 # Define progress callback that prints the current percentage completed for the file
